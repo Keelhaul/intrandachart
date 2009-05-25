@@ -41,6 +41,8 @@ public class DataTable implements Serializable {
 	private static final long serialVersionUID = -6649337945039135394L;
 	private String name;
 	private List<DataRow> dataRows;
+	private boolean showableInTable = true;
+	private boolean showableInChart = true;
 
 	/************************************************************************************
 	 * public constructor, the name is set here
@@ -133,28 +135,68 @@ public class DataTable implements Serializable {
 			return dataRows.size();
 		}
 	}
-	
+
 	/************************************************************************************
 	 * getter current data table as inverted table for different renderings
 	 * 
 	 * @return {@link DataTable} as inverted table
 	 ************************************************************************************/
-	public DataTable getDataTableInverted(){
-		if (getDataRowsSize()==0) return this;
+	public DataTable getDataTableInverted() {
+		if (getDataRowsSize() == 0)
+			return this;
 		DataTable dt = new DataTable(this.getName());
-		
+
 		System.out.println(this.getDataRows().size());
-		
+
 		for (int i = 0; i < this.getDataRows().get(0).getNumberValues(); i++) {
 			String label = this.getDataRows().get(0).getLabel(i);
 			DataRow dr = new DataRow(label);
-			
+
 			for (int j = 0; j < getDataRowsSize(); j++) {
 				DataRow row = this.getDataRows().get(j);
 				dr.addValue(row.getName(), row.getValue(i));
 			}
 			dt.addDataRow(dr);
 		}
+		
+		dt.setShowableInChart(this.isShowableInChart());
+		dt.setShowableInTable(this.isShowableInTable());
 		return dt;
+	}
+
+	/************************************************************************************
+	 * setter for boolean if datatable ist showable in graph
+	 * 
+	 * @param showableInChart
+	 ************************************************************************************/
+	public void setShowableInChart(boolean showableInChart) {
+		this.showableInChart = showableInChart;
+	}
+
+	/************************************************************************************
+	 * getter for showableInChart
+	 * 
+	 * @return if datatable is showableInGraph in Chart
+	 ************************************************************************************/
+	public boolean isShowableInChart() {
+		return showableInChart;
+	}
+
+	/************************************************************************************
+	 * setter for boolean if datatable ist showable in table
+	 * 
+	 * @param showableInTable
+	 ************************************************************************************/
+	public void setShowableInTable(boolean showableInTable) {
+		this.showableInTable = showableInTable;
+	}
+
+	/************************************************************************************
+	 * getter for showableInTable
+	 * 
+	 * @return if datatable is showableInGraph in table
+	 ************************************************************************************/
+	public boolean isShowableInTable() {
+		return showableInTable;
 	}
 }
