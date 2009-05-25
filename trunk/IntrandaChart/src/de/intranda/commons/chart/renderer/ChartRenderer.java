@@ -86,4 +86,12 @@ public class ChartRenderer implements IRenderer {
 	public void setShowMeanValues(Boolean inShowMeanValues) {
 		showMeanValues = inShowMeanValues;
 	}
+
+	/*************************************************************************************
+	 * setter for pattern of number format
+	 * @param inPattern to set
+	 *************************************************************************************/
+	public void setFormatPattern(String inPattern){
+		
+	}
 }

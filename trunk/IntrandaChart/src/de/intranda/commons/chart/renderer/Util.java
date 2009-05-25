@@ -20,31 +20,34 @@
  */
 package de.intranda.commons.chart.renderer;
 
-import de.intranda.commons.chart.results.DataTable;
+import java.text.DecimalFormat;
 
 /*************************************************************************************
- * A renderer interface for very different targets, where the statistical
- * results should be rendered to
+ * A utility class
  * 
  * @author Steffen Hankiewicz
- * @version 22.05.2009
+ * @version 24.05.2009
  *************************************************************************************/
-public interface IRenderer {
+public class Util {
 
-	/**
-	 * @param inDataTable
-	 */
-	public void setDataTable(DataTable inDataTable);
+	public static void main(String[] args) {
+		double bla = 135.54654;
+		System.out.println(roundAsString(bla, "#.##"));
+	}
 
-	/**
-	 * @return
-	 */
-	public Object getRendering();
+	/*************************************************************************************
+	 * method for rounding number to given digits
+	 * 
+	 * @param inValue
+	 *            the value to round
+	 * @param pattern
+	 *            to use for number format
+	 * @return number formatted using the pattern as String
+	 *************************************************************************************/
+	public static String roundAsString(double inValue, String inPattern) {
+		DecimalFormat twoDForm = new DecimalFormat(inPattern);
+		return String.valueOf(twoDForm.format(inValue));
 
-	/**
-	 * @param inPattern
-	 *            the Number format pattern to show the number
-	 */
-	public void setFormatPattern(String inPattern);
+	}
 
 }
