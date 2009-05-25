@@ -94,6 +94,7 @@ public class DataRow implements Serializable {
 	/************************************************************************************
 	 * getter for shortened label
 	 * 
+	 * @param index for index of label to get
 	 * @return name as String
 	 ************************************************************************************/
 	public String getShortLabel(int index) {

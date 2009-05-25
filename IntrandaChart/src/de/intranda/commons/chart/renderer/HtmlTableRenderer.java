@@ -37,7 +37,7 @@ public class HtmlTableRenderer implements IRenderer {
 	}
 
 	public Object getRendering() {
-		if (myDataTable == null || myDataTable.getDataRows().size()==0) {
+		if (myDataTable == null) {
 			throw new IllegalStateException("No DataTable set. No rendering possible.");
 		}
 
