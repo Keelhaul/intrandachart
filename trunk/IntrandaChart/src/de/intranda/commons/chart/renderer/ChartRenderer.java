@@ -48,14 +48,14 @@ public class ChartRenderer implements IRenderer {
 	 * @return BufferedImage with chart
 	 *************************************************************************************/
 	public Object getRendering() {
-		if (myDataTable == null || myDataTable.getDataRows().size()==0) {
+		if (myDataTable == null) {
 			throw new IllegalStateException("No DataTable set. No rendering possible.");
 		}
 
 		if (myDataTable.getDataRows().size()==0){
-			return "";
+			return new BufferedImage(1, 1, BufferedImage.TRANSLUCENT);
 		}
-		
+
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2d = image.createGraphics();
 		g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
@@ -71,7 +71,7 @@ public class ChartRenderer implements IRenderer {
 	 * setter for image size
 	 * 
 	 * @param width with size to set as width
-	 * @param heigth with size to set as height
+	 * @param height with size to set as height
 	 *************************************************************************************/
 	public void setSize(Integer width, Integer height) {
 		this.width = width;
@@ -81,8 +81,7 @@ public class ChartRenderer implements IRenderer {
 	
 	/*************************************************************************************
 	 * setter for showing mean values
-	 * 
-	 * @param Boolean for showing or hiding mean values in chart
+	 * @param inShowMeanValues for showing or hiding mean values in chart
 	 *************************************************************************************/
 	public void setShowMeanValues(Boolean inShowMeanValues) {
 		showMeanValues = inShowMeanValues;

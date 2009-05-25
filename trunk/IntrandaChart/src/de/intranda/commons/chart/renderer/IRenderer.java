@@ -31,8 +31,14 @@ import de.intranda.commons.chart.results.DataTable;
  *************************************************************************************/
 public interface IRenderer {
 	
+	/**
+	 * @param inDataTable
+	 */
 	public void setDataTable(DataTable inDataTable);
 	
+	/**
+	 * @return
+	 */
 	public Object getRendering();
 		
 }

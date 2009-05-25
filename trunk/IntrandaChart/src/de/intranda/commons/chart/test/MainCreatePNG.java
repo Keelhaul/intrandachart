@@ -27,6 +27,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import de.intranda.commons.chart.renderer.StringRenderer;
 import de.intranda.commons.chart.results.ChartDraw;
 import de.intranda.commons.chart.results.DataRow;
 import de.intranda.commons.chart.results.DataTable;
@@ -48,6 +49,19 @@ public class MainCreatePNG {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
+		DataTable dt1 = getSampleDataTable1();
+		DataTable dt2 = dt1.getDataTableInverted();
+		
+		StringRenderer sr = new StringRenderer();
+		sr.setDataTable(dt1);
+		System.out.println(sr.getRendering());
+		
+		
+		StringRenderer sr1 = new StringRenderer();
+		sr1.setDataTable(dt2);
+		System.out.println(sr1.getRendering());
+		
+		
 		createChart(getSampleDataTable1(), "image1.png", 1024, 768);
 		createChart(getSampleDataTable2(), "image2.png", 1024, 768);
 		createChart(getSampleDataTable3(), "image3.png", 1024, 768);
