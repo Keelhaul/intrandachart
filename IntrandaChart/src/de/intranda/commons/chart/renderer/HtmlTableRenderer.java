@@ -31,7 +31,8 @@ import de.intranda.commons.chart.results.DataTable;
  *************************************************************************************/
 public class HtmlTableRenderer implements IRenderer {
 	private DataTable myDataTable;
-
+	private String pattern = "#";
+	
 	public void setDataTable(DataTable inDataTable) {
 		myDataTable = inDataTable;
 	}
@@ -72,7 +73,7 @@ public class HtmlTableRenderer implements IRenderer {
 
 			for (int i = 0; i < row.getNumberValues(); i++) {
 				sb.append("<td class=\"standardTable_Column\">");
-				sb.append(row.getValue(i));
+				sb.append(Util.roundAsString(row.getValue(i), pattern));
 				sb.append("</td>");
 			}
 
@@ -82,4 +83,11 @@ public class HtmlTableRenderer implements IRenderer {
 		return sb.toString();
 	}
 
+	/*************************************************************************************
+	 * setter for pattern of number format
+	 * @param inPattern to set
+	 *************************************************************************************/
+	public void setFormatPattern(String inPattern){
+		pattern=inPattern;
+	}
 }

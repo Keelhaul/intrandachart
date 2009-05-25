@@ -31,7 +31,8 @@ import de.intranda.commons.chart.results.DataTable;
  *************************************************************************************/
 public class StringDebugRenderer implements IRenderer {
 	private DataTable myDataTable;
-
+	private int digits = 0;
+	
 	public void setDataTable(DataTable inDataTable) {
 		myDataTable = inDataTable;
 	}
@@ -61,4 +62,10 @@ public class StringDebugRenderer implements IRenderer {
 		return sb.toString();
 	}
 
+	/*************************************************************************************
+	 * setter for pattern of number format
+	 * @param inPattern to set
+	 *************************************************************************************/
+	public void setFormatPattern(String inPattern){
+	}
 }
