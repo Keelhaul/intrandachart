@@ -52,7 +52,7 @@ public class ChartRenderer implements IRenderer {
 			throw new IllegalStateException("No DataTable set. No rendering possible.");
 		}
 
-		if (myDataTable.getDataRows().size()==0){
+		if (myDataTable.getDataRows().size() == 0) {
 			return new BufferedImage(1, 1, BufferedImage.TRANSLUCENT);
 		}
 
@@ -66,22 +66,24 @@ public class ChartRenderer implements IRenderer {
 		return image;
 	}
 
-	
 	/*************************************************************************************
 	 * setter for image size
 	 * 
-	 * @param width with size to set as width
-	 * @param height with size to set as height
+	 * @param width
+	 *            with size to set as width
+	 * @param height
+	 *            with size to set as height
 	 *************************************************************************************/
 	public void setSize(Integer width, Integer height) {
 		this.width = width;
 		this.height = height;
 	}
 
-	
 	/*************************************************************************************
 	 * setter for showing mean values
-	 * @param inShowMeanValues for showing or hiding mean values in chart
+	 * 
+	 * @param inShowMeanValues
+	 *            for showing or hiding mean values in chart
 	 *************************************************************************************/
 	public void setShowMeanValues(Boolean inShowMeanValues) {
 		showMeanValues = inShowMeanValues;
@@ -89,9 +91,20 @@ public class ChartRenderer implements IRenderer {
 
 	/*************************************************************************************
 	 * setter for pattern of number format
-	 * @param inPattern to set
+	 * 
+	 * @param inPattern
+	 *            to set
 	 *************************************************************************************/
-	public void setFormatPattern(String inPattern){
-		
+	public void setFormatPattern(String inPattern) {
+
+	}
+
+	/*************************************************************************************
+	 * getter for datatable
+	 * 
+	 * @return {@link DataTable}
+	 *************************************************************************************/
+	public DataTable getDataTable() {
+		return myDataTable;
 	}
 }

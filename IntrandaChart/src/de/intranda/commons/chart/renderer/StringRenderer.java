@@ -82,4 +82,13 @@ public class StringRenderer implements IRenderer {
 	public void setFormatPattern(String inPattern){
 		pattern=inPattern;
 	}
+	
+	/*************************************************************************************
+	 * getter for datatable
+	 * 
+	 * @return {@link DataTable}
+	 *************************************************************************************/
+	public DataTable getDataTable() {
+		return myDataTable;
+	}
 }

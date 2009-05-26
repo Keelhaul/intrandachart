@@ -68,4 +68,13 @@ public class StringDebugRenderer implements IRenderer {
 	 *************************************************************************************/
 	public void setFormatPattern(String inPattern){
 	}
+	
+	/*************************************************************************************
+	 * getter for datatable
+	 * 
+	 * @return {@link DataTable}
+	 *************************************************************************************/
+	public DataTable getDataTable() {
+		return myDataTable;
+	}
 }
