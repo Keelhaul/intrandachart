@@ -53,7 +53,9 @@ public class HtmlTableRenderer implements IRenderer {
 		 * write table header
 		 * --------------------------------*/
 		sb.append("<thead><tr class=\"standardTable_Header\">");
-		sb.append("<th class=\"standardTable_Header\" />");
+		sb.append("<th class=\"standardTable_Header\">");
+		sb.append(myDataTable.getSubname());
+		sb.append("</th class=\"standardTable_Header\">");
 		DataRow firstrow = myDataTable.getDataRows().get(0);
 		for (int i = 0; i < firstrow.getNumberValues(); i++) {
 			sb.append("<th class=\"standardTable_Header\">");
@@ -89,5 +91,14 @@ public class HtmlTableRenderer implements IRenderer {
 	 *************************************************************************************/
 	public void setFormatPattern(String inPattern){
 		pattern=inPattern;
+	}
+	
+	/*************************************************************************************
+	 * getter for datatable
+	 * 
+	 * @return {@link DataTable}
+	 *************************************************************************************/
+	public DataTable getDataTable() {
+		return myDataTable;
 	}
 }

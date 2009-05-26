@@ -37,6 +37,11 @@ public interface IRenderer {
 	public void setDataTable(DataTable inDataTable);
 
 	/**
+	 * @return dataTable
+	 */
+	public DataTable getDataTable();
+	
+	/**
 	 * @return
 	 */
 	public Object getRendering();
@@ -47,4 +52,6 @@ public interface IRenderer {
 	 */
 	public void setFormatPattern(String inPattern);
 
+	
+	
 }

@@ -40,6 +40,7 @@ import java.util.List;
 public class DataTable implements Serializable {
 	private static final long serialVersionUID = -6649337945039135394L;
 	private String name;
+	private String subname;
 	private List<DataRow> dataRows;
 	private boolean showableInTable = true;
 	private boolean showableInChart = true;
@@ -53,6 +54,7 @@ public class DataTable implements Serializable {
 	public DataTable(String title) {
 		super();
 		this.name = title;
+		this.subname = "";
 		dataRows = new ArrayList<DataRow>();
 	}
 
@@ -115,6 +117,25 @@ public class DataTable implements Serializable {
 	}
 
 	/************************************************************************************
+	 * getter for subname
+	 * 
+	 * @return subname as string
+	 ************************************************************************************/
+	public String getSubname() {
+		return subname;
+	}
+
+	/************************************************************************************
+	 * setter for subname
+	 * 
+	 * @param subname
+	 *            as string
+	 ************************************************************************************/
+	public void setSubname(String subname) {
+		this.subname = subname;
+	}
+	
+	/************************************************************************************
 	 * getter for all DataRows
 	 * 
 	 * @return list of {@link DataRow}
@@ -161,6 +182,7 @@ public class DataTable implements Serializable {
 		
 		dt.setShowableInChart(this.isShowableInChart());
 		dt.setShowableInTable(this.isShowableInTable());
+		dt.setSubname(this.getSubname());
 		return dt;
 	}
 
