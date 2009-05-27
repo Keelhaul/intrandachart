@@ -154,8 +154,9 @@ public class ChartDraw {
 		DataRow firstRow = dataTable.getDataRows().get(0);
 		xtickMarks = new ArrayList<String>(firstRow.getNumberValues());
 		for (int i = 0; i < firstRow.getNumberValues(); i++) {
-			xtickMarks.add(i, firstRow.getShortLabel(i));
-			w = fm.stringWidth(firstRow.getShortLabel(i));
+			String shortlabel = firstRow.getShortLabel(i);
+			xtickMarks.add(i, shortlabel);
+			w = fm.stringWidth(shortlabel);
 			if (w > xMaxTickMarkWidth) {
 				xMaxTickMarkWidth = w;
 			}

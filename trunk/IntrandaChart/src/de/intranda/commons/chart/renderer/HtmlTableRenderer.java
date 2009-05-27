@@ -32,23 +32,28 @@ import de.intranda.commons.chart.results.DataTable;
 public class HtmlTableRenderer implements IRenderer {
 	private DataTable myDataTable;
 	private String pattern = "#";
-	
+
 	public void setDataTable(DataTable inDataTable) {
 		myDataTable = inDataTable;
 	}
 
 	public Object getRendering() {
+		/* --------------------------------
+		 * datatalbe is null
+		 * --------------------------------*/
 		if (myDataTable == null) {
-			throw new IllegalStateException("No DataTable set. No rendering possible.");
+			return ("<p>DataTable is null</p>");
+		}
+		/* --------------------------------
+		 * datatalbe is empty
+		 * --------------------------------*/
+		if (myDataTable.getDataRows().size() == 0) {
+			return ("<p>DataTable " + myDataTable.getName() + " - " + myDataTable.getSubname() + " has no rows</p>");
 		}
 
-		if (myDataTable.getDataRows().size()==0){
-			return "";
-		}
-		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<table cellpadding=\"1px\" cellspacing=\"1px\" class=\"standardTable\">");
-		
+
 		/* --------------------------------
 		 * write table header
 		 * --------------------------------*/
@@ -63,7 +68,7 @@ public class HtmlTableRenderer implements IRenderer {
 			sb.append("</th>");
 		}
 		sb.append("</tr></thead>");
-		
+
 		/* --------------------------------
 		 * write each row
 		 * --------------------------------*/
@@ -82,6 +87,7 @@ public class HtmlTableRenderer implements IRenderer {
 			sb.append("</tr>");
 		}
 		sb.append("</table>");
+
 		return sb.toString();
 	}
 
@@ -89,10 +95,10 @@ public class HtmlTableRenderer implements IRenderer {
 	 * setter for pattern of number format
 	 * @param inPattern to set
 	 *************************************************************************************/
-	public void setFormatPattern(String inPattern){
-		pattern=inPattern;
+	public void setFormatPattern(String inPattern) {
+		pattern = inPattern;
 	}
-	
+
 	/*************************************************************************************
 	 * getter for datatable
 	 * 

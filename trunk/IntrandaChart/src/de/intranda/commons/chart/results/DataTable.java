@@ -61,11 +61,32 @@ public class DataTable implements Serializable {
 	/************************************************************************************
 	 * add {@link DataRow} to list
 	 * 
-	 * @param dataRow
+	 * @param newRow
 	 *            the {@link DataRow} to add
 	 ************************************************************************************/
-	public void addDataRow(DataRow dataRow) {
-		dataRows.add(dataRow);
+	public void addDataRow(DataRow newRow) {
+		if (dataRows.size() > 0) {
+			/* fill missing columns in other rows */
+			for (DataRow row : dataRows) {
+				for (String label : newRow.getLabels()) {
+//					System.out.println("label coming from row " + row.getName() + ": " + label);
+					if (!row.isContainsLabel(label)) {
+						row.addValue(label, new Double(0));
+					}
+				}
+			}
+
+			/* fill missing columns in new row */
+			DataRow tempRow = new DataRow(newRow.getName());
+			tempRow.setShowMeanValue(newRow.isShowMeanValue());
+			for (String label : dataRows.get(0).getLabels()) {
+//				System.out.println("label check: " + label);
+				tempRow.addValue(label, newRow.getValue(label));
+			}
+			dataRows.add(tempRow);
+		} else {
+			dataRows.add(newRow);
+		}
 	}
 
 	/************************************************************************************
@@ -134,7 +155,7 @@ public class DataTable implements Serializable {
 	public void setSubname(String subname) {
 		this.subname = subname;
 	}
-	
+
 	/************************************************************************************
 	 * getter for all DataRows
 	 * 
@@ -179,7 +200,7 @@ public class DataTable implements Serializable {
 			}
 			dt.addDataRow(dr);
 		}
-		
+
 		dt.setShowableInChart(this.isShowableInChart());
 		dt.setShowableInTable(this.isShowableInTable());
 		dt.setSubname(this.getSubname());

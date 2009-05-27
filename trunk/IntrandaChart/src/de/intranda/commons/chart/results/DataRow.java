@@ -64,21 +64,28 @@ public class DataRow implements Serializable {
 	 * @param inValue the value as a Double
 	 ************************************************************************************/
 	public void addValue(String inLabel, Double inValue) {
-		labels.add(inLabel);
-		values.add(inValue);
+		if (inLabel == null) {
+			inLabel = "-";
+		}
+		if (labels.contains(inLabel)) {
+			values.set(labels.indexOf(inLabel), inValue);
+		} else {
+			labels.add(inLabel);
+			values.add(inValue);
+		}
 	}
 
-	/************************************************************************************
-	 * set a value in the {@link DataRow} by supplying the list index
-	 * 
-	 * @param index index of the element to change
-	 * @param inLabel the label of the element
-	 * @param inValue the value of the element
-	 ************************************************************************************/
-	public void setValue(int index, String inLabel, Double inValue) {
-		labels.set(index, inLabel);
-		values.set(index, inValue);
-	}
+	//	/************************************************************************************
+	//	 * set a value in the {@link DataRow} by supplying the list index
+	//	 * 
+	//	 * @param index index of the element to change
+	//	 * @param inLabel the label of the element
+	//	 * @param inValue the value of the element
+	//	 ************************************************************************************/
+	//	public void setValue(int index, String inLabel, Double inValue) {
+	//		labels.set(index, inLabel);
+	//		values.set(index, inValue);
+	//	}
 
 	/************************************************************************************
 	 * get label of an element
@@ -87,9 +94,12 @@ public class DataRow implements Serializable {
 	 * @return label of the element
 	 ************************************************************************************/
 	public String getLabel(int index) {
-		return labels.get(index);
+		if (labels.get(index) == null) {
+			return "";
+		} else {
+			return labels.get(index);
+		}
 	}
-
 
 	/************************************************************************************
 	 * getter for shortened label
@@ -98,6 +108,7 @@ public class DataRow implements Serializable {
 	 * @return name as String
 	 ************************************************************************************/
 	public String getShortLabel(int index) {
+		System.out.println(index);
 		String myLabel = getLabel(index);
 		if (myLabel != null && myLabel.length() > maxShortNameLength) {
 			return myLabel.substring(0, maxShortNameLength) + "...";
@@ -105,7 +116,7 @@ public class DataRow implements Serializable {
 			return myLabel;
 		}
 	}
-	
+
 	/************************************************************************************
 	 * get value of an element
 	 * 
@@ -114,6 +125,20 @@ public class DataRow implements Serializable {
 	 ************************************************************************************/
 	public Double getValue(int index) {
 		return values.get(index);
+	}
+
+	/************************************************************************************
+	 * get value of an element
+	 * 
+	 * @param index list index of the element
+	 * @return value of the element
+	 ************************************************************************************/
+	public Double getValue(String inLabel) {
+		if (labels.contains(inLabel)) {
+			return values.get(labels.indexOf(inLabel));
+		} else {
+			return new Double(0);
+		}
 	}
 
 	/************************************************************************************
@@ -159,7 +184,11 @@ public class DataRow implements Serializable {
 	 * @return name as String
 	 ************************************************************************************/
 	public String getName() {
-		return name;
+		if (name == null) {
+			return "";
+		} else {
+			return name;
+		}
 	}
 
 	/**************************************************************************************
@@ -187,6 +216,14 @@ public class DataRow implements Serializable {
 	 **************************************************************************************/
 	public void setShowMeanValue(boolean showMeanValue) {
 		this.showMeanValue = showMeanValue;
+	}
+
+	public Boolean isContainsLabel(String inLabel) {
+		return labels.contains(inLabel);
+	}
+
+	public List<String> getLabels() {
+		return labels;
 	}
 
 }
