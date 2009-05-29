@@ -65,7 +65,7 @@ public class PieChartRenderer implements IRenderer {
 		for (int i = 0; i < firstrow.getNumberValues(); i++) {
 			pieDataset.setValue(firstrow.getLabel(i), firstrow.getValue(i));
 		}
-		JFreeChart chart = ChartFactory.createPieChart(myDataTable.getName() + " - " + myDataTable.getSubname(), pieDataset, true, false, false);
+		JFreeChart chart = ChartFactory.createPieChart3D(myDataTable.getName() + " - " + myDataTable.getSubname(), pieDataset, true, false, false);
 		chart.setBackgroundPaint(Color.white);
 		
 		BufferedImage image = chart.createBufferedImage(width,height);
