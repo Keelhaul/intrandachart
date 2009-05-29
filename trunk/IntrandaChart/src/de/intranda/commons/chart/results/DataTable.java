@@ -44,7 +44,8 @@ public class DataTable implements Serializable {
 	private List<DataRow> dataRows;
 	private boolean showableInTable = true;
 	private boolean showableInChart = true;
-
+	private boolean showableInPieChart = false;
+	
 	/************************************************************************************
 	 * public constructor, the name is set here
 	 * 
@@ -188,7 +189,7 @@ public class DataTable implements Serializable {
 			return this;
 		DataTable dt = new DataTable(this.getName());
 
-		System.out.println(this.getDataRows().size());
+		//System.out.println(this.getDataRows().size());
 
 		for (int i = 0; i < this.getDataRows().get(0).getNumberValues(); i++) {
 			String label = this.getDataRows().get(0).getLabel(i);
@@ -242,4 +243,23 @@ public class DataTable implements Serializable {
 	public boolean isShowableInTable() {
 		return showableInTable;
 	}
+
+	/************************************************************************************
+	 * setter for boolean if datatable ist showable in piegraph
+	 * 
+	 * @param showableInPieChart
+	 ************************************************************************************/
+	public void setShowableInPieChart(boolean showableInPieChart) {
+		this.showableInPieChart = showableInPieChart;
+	}
+
+	/************************************************************************************
+	 * getter for showableInPieChart
+	 * 
+	 * @return if datatable is showableInGraph in PieChart
+	 ************************************************************************************/
+	public boolean isShowableInPieChart() {
+		return showableInPieChart;
+	}
+
 }
