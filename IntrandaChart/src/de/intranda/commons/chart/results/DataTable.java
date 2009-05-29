@@ -41,6 +41,7 @@ public class DataTable implements Serializable {
 	private static final long serialVersionUID = -6649337945039135394L;
 	private String name;
 	private String subname;
+	private String unitLabel;
 	private List<DataRow> dataRows;
 	private boolean showableInTable = true;
 	private boolean showableInChart = true;
@@ -56,6 +57,7 @@ public class DataTable implements Serializable {
 		super();
 		this.name = title;
 		this.subname = "";
+		unitLabel = "";
 		dataRows = new ArrayList<DataRow>();
 	}
 
@@ -262,4 +264,22 @@ public class DataTable implements Serializable {
 		return showableInPieChart;
 	}
 
+	/************************************************************************************
+	 * getter for unitLabel
+	 * 
+	 * @return unitLabel as String
+	 ************************************************************************************/
+	public String getUnitLabel() {
+		return unitLabel;
+	}
+	
+	/************************************************************************************
+	 * setter for unitLabel
+	 * 
+	 * @param unitLabel
+	 ************************************************************************************/
+	public void setUnitLabel(String unitLabel) {
+		this.unitLabel = unitLabel;
+	}
+	
 }
