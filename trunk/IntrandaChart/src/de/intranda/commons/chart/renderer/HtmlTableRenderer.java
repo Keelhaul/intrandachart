@@ -59,7 +59,11 @@ public class HtmlTableRenderer implements IRenderer {
 		 * --------------------------------*/
 		sb.append("<thead><tr class=\"standardTable_Header\">");
 		sb.append("<th class=\"standardTable_Header\">");
-		sb.append(myDataTable.getSubname());
+		if (myDataTable.getUnitLabel() == null || myDataTable.getUnitLabel().length() == 0) {
+			sb.append(myDataTable.getSubname());
+		} else {
+			sb.append(myDataTable.getUnitLabel());
+		}
 		sb.append("</th class=\"standardTable_Header\">");
 		DataRow firstrow = myDataTable.getDataRows().get(0);
 		for (int i = 0; i < firstrow.getNumberValues(); i++) {
@@ -93,7 +97,9 @@ public class HtmlTableRenderer implements IRenderer {
 
 	/*************************************************************************************
 	 * setter for pattern of number format
-	 * @param inPattern to set
+	 * 
+	 * @param inPattern
+	 *            to set
 	 *************************************************************************************/
 	public void setFormatPattern(String inPattern) {
 		pattern = inPattern;
