@@ -25,6 +25,7 @@ import java.awt.image.BufferedImage;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.data.general.DefaultPieDataset;
 
 import de.intranda.commons.chart.results.DataRow;
@@ -61,12 +62,18 @@ public class PieChartRenderer implements IRenderer {
 		}
 		
 		DefaultPieDataset pieDataset = new DefaultPieDataset();
+		
 		DataRow firstrow = myDataTable.getDataRows().get(0);
 		for (int i = 0; i < firstrow.getNumberValues(); i++) {
 			pieDataset.setValue(firstrow.getLabel(i), firstrow.getValue(i));
 		}
-		JFreeChart chart = ChartFactory.createPieChart3D(myDataTable.getName() + " - " + myDataTable.getSubname(), pieDataset, true, false, false);
+		JFreeChart chart = ChartFactory.createPieChart3D("", pieDataset, true, false, false);
 		chart.setBackgroundPaint(Color.white);
+		
+		PiePlot3D plot = (PiePlot3D) chart.getPlot();
+		plot.setForegroundAlpha(0.6f);
+		plot.setDepthFactor(0.05);
+		plot.setCircular(false);
 		
 		BufferedImage image = chart.createBufferedImage(width,height);
 		return image;
