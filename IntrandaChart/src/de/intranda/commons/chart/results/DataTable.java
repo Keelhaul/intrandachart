@@ -205,6 +205,7 @@ public class DataTable implements Serializable {
 		dt.setShowableInChart(this.isShowableInChart());
 		dt.setShowableInTable(this.isShowableInTable());
 		dt.setSubname(this.getSubname());
+		dt.setUnitLabel(this.getUnitLabel());
 		return dt;
 	}
 

@@ -26,7 +26,7 @@ public class PieChartDraw {
 		PiePlot3D plot = (PiePlot3D) chart.getPlot();
 		plot.setForegroundAlpha(0.6f);
 		plot.setDepthFactor(0.05);
-		plot.setCircular(false);
+		plot.setCircular(true);
 		
 		ChartUtilities.saveChartAsPNG(new File("C:/home/freechart1.png"), chart, 1024, 768);
 	}
