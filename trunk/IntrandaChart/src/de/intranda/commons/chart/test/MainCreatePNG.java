@@ -120,6 +120,7 @@ public class MainCreatePNG {
 	private static DataTable getSampleDataTable1() {
 		String title = new String("Some sample data");
 		DataTable dataTable = new DataTable(title);
+		dataTable.setUnitLabel("some unit");
 		dataTable.addDataRow(getSampleRow1());
 		dataTable.addDataRow(getSampleRow2());
 		dataTable.addDataRow(getSampleRow3());
@@ -134,6 +135,7 @@ public class MainCreatePNG {
 	private static DataTable getSampleDataTable2() {
 		String title = new String("Some sample data");
 		DataTable dataTable = new DataTable(title);
+		dataTable.setUnitLabel("some unit");
 		dataTable.addDataRow(getSampleRow1());
 		dataTable.addDataRow(getSampleRow2());
 		return dataTable;
@@ -147,6 +149,7 @@ public class MainCreatePNG {
 	private static DataTable getSampleDataTable3() {
 		String title = new String("Some sample data");
 		DataTable dataTable = new DataTable(title);
+		dataTable.setUnitLabel("some unit");
 		dataTable.addDataRow(getSampleRow1());
 		return dataTable;
 	}
@@ -159,6 +162,7 @@ public class MainCreatePNG {
 	private static DataTable getSampleDataTable4() {
 		String title = new String("Some sample data");
 		DataTable dataTable = new DataTable(title);
+		dataTable.setUnitLabel("some unit");
 		dataTable.addDataRow(getSampleRow4());
 		dataTable.addDataRow(getSampleRow5());
 		return dataTable;
@@ -172,6 +176,7 @@ public class MainCreatePNG {
 	private static DataTable getSampleDataTable5() {
 		String title = new String("Some sample data");
 		DataTable dataTable = new DataTable(title);
+		dataTable.setUnitLabel("some unit");
 		dataTable.addDataRow(getSampleRow4());
 		return dataTable;
 	}
@@ -184,6 +189,7 @@ public class MainCreatePNG {
 	private static DataTable getSampleDataTable6() {
 		String title = new String("Some sample data");
 		DataTable dataTable = new DataTable(title);
+		dataTable.setUnitLabel("some unit");
 		dataTable.addDataRow(getSampleRow5());
 		return dataTable;
 	}
@@ -196,6 +202,7 @@ public class MainCreatePNG {
 	private static DataTable getSampleDataTable7() {
 		String title = new String("Some sample data");
 		DataTable dataTable = new DataTable(title);
+		dataTable.setUnitLabel("some unit");
 		DataRow row = new DataRow("2008");
 		row.addValue(new String("Februar"), new Double(10.0));
 		dataTable.addDataRow(row);
@@ -210,6 +217,7 @@ public class MainCreatePNG {
 	private static DataTable getSampleDataTable8() {
 		String title = new String("Some sample data 8");
 		DataTable dataTable = new DataTable(title);
+		dataTable.setUnitLabel("some unit");
 		DataRow row = new DataRow("2010");
 
 		for (int i = 4; i <= 100; i++) {
@@ -227,7 +235,8 @@ public class MainCreatePNG {
 	private static DataTable getSampleDataTable9() {
 		String title = new String("Some sample data 8");
 		DataTable dataTable = new DataTable(title);
-
+		dataTable.setUnitLabel("some unit");
+		
 		DataRow row = new DataRow("null");
 		row.addValue("Anlegen eines Prozesses (auf Bandebene)", 6.0);
 		row.addValue("Archivierung", 7.0);

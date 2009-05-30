@@ -32,7 +32,7 @@ public class Util {
 
 	public static void main(String[] args) {
 		double bla = 135.54654;
-		System.out.println(roundAsString(bla, "#.##"));
+//		System.out.println(roundAsString(bla, "#.##"));
 	}
 
 	/*************************************************************************************
