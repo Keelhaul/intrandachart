@@ -108,7 +108,6 @@ public class DataRow implements Serializable {
 	 * @return name as String
 	 ************************************************************************************/
 	public String getShortLabel(int index) {
-		//System.out.println(index);
 		String myLabel = getLabel(index);
 		if (myLabel != null && myLabel.length() > maxShortNameLength) {
 			return myLabel.substring(0, maxShortNameLength) + "...";

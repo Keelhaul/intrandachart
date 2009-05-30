@@ -233,7 +233,8 @@ public class ChartDraw {
 				 * border on each side of the legend + space for colored boxes +
 				 * padding between different titles
 				 */
-				totalLegendStringWidth += LEGENDPADDING + fm.getHeight() + fm.stringWidth(row.getName()) + 2 * LEGENDPADDING;
+				totalLegendStringWidth += LEGENDPADDING + fm.getHeight() + fm.stringWidth(row.getName()) + 2
+						* LEGENDPADDING;
 			}
 			if (totalLegendStringWidth > chartWidth) {
 				// do line wrapping inside legend
@@ -263,6 +264,11 @@ public class ChartDraw {
 			legendHeight = 0;
 		}
 
+		/* if there should be displayed some label at the x-axis */
+		if (showUnitLabel()) {
+			legendHeight += LEGENDPADDING + fm.getHeight();
+		}
+
 		chartBottom = height - borderBottom - (legendHeight + 2 * LEGENDPADDING);
 		chartHeight = chartBottom - borderTop;
 
@@ -277,13 +283,13 @@ public class ChartDraw {
 			int size = row.getNumberValues();
 
 			for (int i = 0; i < size; i++) {
-				drawBar(borderLeft + 0.25 * xGridWidth + (d + 0.5) * (0.5 * xGridWidth / dataTable.getDataRows().size()) + i * chartWidth
-						/ xtickMarks.size(), 0.5 * xGridWidth / dataTable.getDataRows().size(), row.getValue(i) * chartHeight / yMaxValue - 1,
-						getColorByIndex(d));
+				drawBar(borderLeft + 0.25 * xGridWidth + (d + 0.5)
+						* (0.5 * xGridWidth / dataTable.getDataRows().size()) + i * chartWidth / xtickMarks.size(), 0.5
+						* xGridWidth / dataTable.getDataRows().size(), row.getValue(i) * chartHeight / yMaxValue - 1,
+					getColorByIndex(d));
 			}
 		}
 
-		
 		// show meanValues as line in front of bars
 		for (int d = 0; d < dataTable.getDataRows().size(); d++) {
 			DataRow row = dataTable.getDataRows().get(d);
@@ -291,7 +297,7 @@ public class ChartDraw {
 				drawMeanLine(row.getMeanValue() * chartHeight / yMaxValue - 1, getColorByIndex(d));
 			}
 		}
-		
+
 		if (dataTable.getDataRows().size() > 0) {
 			// draw axes and labels
 			drawAxis();
@@ -306,6 +312,12 @@ public class ChartDraw {
 			// show the legend if there's more than one SimpleDataSet
 			drawLegend();
 		}
+
+		/* if there should be displayed some label at the x-axis */
+		if (showUnitLabel()) {
+			drawUnitLabel();
+		}
+
 	}
 
 	/************************************************************************************
@@ -316,18 +328,27 @@ public class ChartDraw {
 		int entryXPos;
 		int entryYPos;
 
+		/* without unit-label, legend ist smaller */
+		int legendHeightDependingOnUnitLabel = legendHeight;
+		if (showUnitLabel()) {
+			legendHeightDependingOnUnitLabel -= LEGENDPADDING;
+			legendHeightDependingOnUnitLabel -= fm.getHeight();
+		}
+
 		// draw a box around the legend
 		g2d.setColor(Color.black);
-		g2d.draw(new Rectangle2D.Double(width / 2 - legendWidth / 2, height - legendHeight - LEGENDPADDING, legendWidth, legendHeight));
+		g2d.draw(new Rectangle2D.Double(width / 2 - legendWidth / 2, height - legendHeightDependingOnUnitLabel
+				- LEGENDPADDING, legendWidth, legendHeightDependingOnUnitLabel));
 
 		// if the text is too long move it to the next line
 		entryXPos = width / 2 - legendWidth / 2 + LEGENDPADDING;
-		entryYPos = height - legendHeight + fm.getHeight() / 2;
+		entryYPos = height - legendHeightDependingOnUnitLabel + fm.getHeight() / 2;
 		for (int d = 0; d < dataTable.getDataRows().size(); d++) {
 			DataRow row = dataTable.getDataRows().get(d);
 
 			// text too long?
-			if (entryXPos + fm.getHeight() + fm.stringWidth(row.getName()) + 2 * LEGENDPADDING > width / 2 + legendWidth / 2) {
+			if (entryXPos + fm.getHeight() + fm.stringWidth(row.getName()) + 2 * LEGENDPADDING > width / 2
+					+ legendWidth / 2) {
 				// move on to the next line
 				entryXPos = width / 2 - legendWidth / 2 + LEGENDPADDING;
 				entryYPos += fm.getHeight();
@@ -335,7 +356,8 @@ public class ChartDraw {
 
 			// draw a colored box
 			g2d.setColor(getColorByIndex(d));
-			g2d.fill(new Rectangle2D.Double(entryXPos + fm.getHeight() / 4, entryYPos - fm.getHeight() / 4, fm.getHeight() / 2, fm.getHeight() / 2));
+			g2d.fill(new Rectangle2D.Double(entryXPos + fm.getHeight() / 4, entryYPos - fm.getHeight() / 4, fm
+				.getHeight() / 2, fm.getHeight() / 2));
 			entryXPos += fm.getHeight();
 
 			// show the text
@@ -344,6 +366,28 @@ public class ChartDraw {
 
 			entryXPos += fm.stringWidth(row.getName()) + 3 * LEGENDPADDING - 1;
 		}
+	}
+
+	/************************************************************************************
+	 * draw unit label for chart
+	 ************************************************************************************/
+	private void drawUnitLabel() {
+		int unitHeight = fm.getHeight() + LEGENDPADDING;
+		int entryXPos = width / 2;
+		int entryYPos = height - legendHeight - LEGENDPADDING + fm.getHeight() / 2;
+		// show the text
+		g2d.setColor(Color.black);
+		drawCenteredString(dataTable.getUnitLabel(), entryXPos, entryYPos);
+
+	}
+
+	/*************************************************************************************
+	 * check if unit-Label should be drawn
+	 * 
+	 * @return boolean true, if label is shown
+	 *************************************************************************************/
+	private boolean showUnitLabel() {
+		return dataTable.getUnitLabel() != null && dataTable.getUnitLabel().length() > 0;
 	}
 
 	/*************************************************************************************
@@ -359,7 +403,8 @@ public class ChartDraw {
 	 *            the color of the bar
 	 *************************************************************************************/
 	private void drawBar(double xpos, double width, double barsize, Color col) {
-		GradientPaint verlauf = new GradientPaint((int) xpos, borderTop, col, (int) xpos, (int) (2.0 * chartHeight), Color.white);
+		GradientPaint verlauf = new GradientPaint((int) xpos, borderTop, col, (int) xpos, (int) (2.0 * chartHeight),
+			Color.white);
 
 		g2d.setPaint(verlauf);
 		g2d.fill(new Rectangle2D.Double(xpos - 0.5 * width, chartBottom - barsize, width, barsize));
@@ -449,14 +494,15 @@ public class ChartDraw {
 			float dash1[] = { 2.0f };
 			BasicStroke dashed = new BasicStroke(0.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f);
 			g2d.setStroke(dashed);
-			g2d.draw(new Line2D.Double(borderLeft, chartBottom - (i + 1) * yGridWidth * chartHeight / yMaxValue, width - BORDERRIGHT, chartBottom
-					- (i + 1) * yGridWidth * chartHeight / yMaxValue));
+			g2d.draw(new Line2D.Double(borderLeft, chartBottom - (i + 1) * yGridWidth * chartHeight / yMaxValue, width
+					- BORDERRIGHT, chartBottom - (i + 1) * yGridWidth * chartHeight / yMaxValue));
 
 			// ticks and numbers
 			g2d.setStroke(new BasicStroke());
-			g2d.draw(new Line2D.Double(borderLeft - 5, chartBottom - (i + 1) * yGridWidth * chartHeight / yMaxValue, borderLeft + 5, chartBottom
-					- (i + 1) * yGridWidth * chartHeight / yMaxValue));
-			drawRightAlignedString(ytickMarks.get(i), borderLeft - fm.getHeight(), chartBottom - (i + 1) * yGridWidth * chartHeight / yMaxValue);
+			g2d.draw(new Line2D.Double(borderLeft - 5, chartBottom - (i + 1) * yGridWidth * chartHeight / yMaxValue,
+				borderLeft + 5, chartBottom - (i + 1) * yGridWidth * chartHeight / yMaxValue));
+			drawRightAlignedString(ytickMarks.get(i), borderLeft - fm.getHeight(), chartBottom - (i + 1) * yGridWidth
+					* chartHeight / yMaxValue);
 		}
 
 		// x-axis
@@ -477,8 +523,9 @@ public class ChartDraw {
 		s = xtickMarks.size();
 		for (int i = 0; i < s; i++) {
 			// ticks
-			g2d.draw(new Line2D.Double(borderLeft + 0.5 * xGridWidth + i * (width - borderLeft - BORDERRIGHT) / s, chartBottom + 7, borderLeft + 0.5
-					* xGridWidth + i * (width - borderLeft - BORDERRIGHT) / s, chartBottom));
+			g2d.draw(new Line2D.Double(borderLeft + 0.5 * xGridWidth + i * (width - borderLeft - BORDERRIGHT) / s,
+				chartBottom + 7, borderLeft + 0.5 * xGridWidth + i * (width - borderLeft - BORDERRIGHT) / s,
+				chartBottom));
 
 			/*
 			 * rotate text by 45 degree if there's not enough space to show it
@@ -490,15 +537,15 @@ public class ChartDraw {
 							* (width - borderLeft - BORDERRIGHT) / s, chartBottom + fm.getHeight());
 					g2d.transform(at);
 
-					drawRightAlignedString(xtickMarks.get(i), borderLeft + 0.5 * xGridWidth + i * (width - borderLeft - BORDERRIGHT) / s, chartBottom
-							+ fm.getHeight());
-					at = AffineTransform.getRotateInstance(Math.toRadians(45), borderLeft + 0.5 * xGridWidth + i * (width - borderLeft - BORDERRIGHT)
-							/ s, chartBottom + fm.getHeight());
+					drawRightAlignedString(xtickMarks.get(i), borderLeft + 0.5 * xGridWidth + i
+							* (width - borderLeft - BORDERRIGHT) / s, chartBottom + fm.getHeight());
+					at = AffineTransform.getRotateInstance(Math.toRadians(45), borderLeft + 0.5 * xGridWidth + i
+							* (width - borderLeft - BORDERRIGHT) / s, chartBottom + fm.getHeight());
 					g2d.transform(at);
 				}
 			} else {
-				drawCenteredString(xtickMarks.get(i), borderLeft + 0.5 * xGridWidth + i * (width - borderLeft - BORDERRIGHT) / s, chartBottom
-						+ fm.getHeight());
+				drawCenteredString(xtickMarks.get(i), borderLeft + 0.5 * xGridWidth + i
+						* (width - borderLeft - BORDERRIGHT) / s, chartBottom + fm.getHeight());
 			}
 		}
 	}

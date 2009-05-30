@@ -191,8 +191,6 @@ public class DataTable implements Serializable {
 			return this;
 		DataTable dt = new DataTable(this.getName());
 
-		//System.out.println(this.getDataRows().size());
-
 		for (int i = 0; i < this.getDataRows().get(0).getNumberValues(); i++) {
 			String label = this.getDataRows().get(0).getLabel(i);
 			DataRow dr = new DataRow(label);
