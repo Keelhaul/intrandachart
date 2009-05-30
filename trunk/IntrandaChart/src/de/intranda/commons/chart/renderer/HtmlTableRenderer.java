@@ -83,7 +83,7 @@ public class HtmlTableRenderer implements IRenderer {
 			sb.append("</td>");
 
 			for (int i = 0; i < row.getNumberValues(); i++) {
-				sb.append("<td class=\"standardTable_Column\">");
+				sb.append("<td class=\"standardTable_ColumnRight\">");
 				sb.append(Util.roundAsString(row.getValue(i), pattern));
 				sb.append("</td>");
 			}
