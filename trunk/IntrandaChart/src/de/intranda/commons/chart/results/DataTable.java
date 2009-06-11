@@ -61,6 +61,18 @@ public class DataTable implements Serializable {
 		dataRows = new ArrayList<DataRow>();
 	}
 
+	/** usually the header is derived from the String value of the value pairs in the added DataRows
+	 * sometimes it is necessary to do all headers first ... irrespective of it's values, if a 
+	 * certain order is needed and cannot be provided with the first added DataRow. In this case add
+	 * a headerRow, hold it and when you are done loading the DataTable you can delete it again
+	 * so only the headers will remain and not this dummy DataRow
+	 * 
+	 * @param headerRow
+	 */
+	public void removeDataRow(DataRow deleteRow){
+		dataRows.remove(deleteRow);
+	}
+	
 	/************************************************************************************
 	 * add {@link DataRow} to list
 	 * 
