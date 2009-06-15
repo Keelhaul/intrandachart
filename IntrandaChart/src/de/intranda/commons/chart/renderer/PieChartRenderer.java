@@ -70,6 +70,7 @@ public class PieChartRenderer implements IRenderer {
 		chart.setBackgroundPaint(Color.white);
 		
 		PiePlot3D plot = (PiePlot3D) chart.getPlot();
+		plot.setBackgroundPaint(Color.white);
 		plot.setForegroundAlpha(0.6f);
 		plot.setDepthFactor(0.05);
 		plot.setCircular(true);
