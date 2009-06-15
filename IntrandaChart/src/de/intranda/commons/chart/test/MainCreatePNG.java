@@ -20,12 +20,19 @@
  */
 package de.intranda.commons.chart.test;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.data.general.DefaultPieDataset;
 
 import de.intranda.commons.chart.renderer.StringRenderer;
 import de.intranda.commons.chart.results.ChartDraw;
@@ -61,7 +68,6 @@ public class MainCreatePNG {
 		sr1.setDataTable(dt2);
 		System.out.println(sr1.getRendering());
 		
-		
 		createChart(getSampleDataTable1(), "image1.png", 1024, 768);
 		createChart(getSampleDataTable2(), "image2.png", 1024, 768);
 		createChart(getSampleDataTable3(), "image3.png", 1024, 768);
@@ -71,9 +77,35 @@ public class MainCreatePNG {
 		createChart(getSampleDataTable7(), "image7.png", 1024, 768);
 		createChart(getSampleDataTable8(), "image8.png", 1024, 768);
 		createChart(getSampleDataTable9(), "image9.png", 1920, 1200);
+		createPieChart("image10.png", 1024, 768);
+		
 		System.out.println("fertig");
 	}
 
+	/************************************************************************************
+	 * create sample pie chart
+	 * 
+	 * @param width width of the image
+	 * @param height height of the image
+	 * @throws IOException 
+	 ************************************************************************************/
+	private static void createPieChart(String fileName, int width, int height) throws IOException {
+		DefaultPieDataset pieDataset = new DefaultPieDataset();
+		pieDataset.setValue("Java", new Integer(75));
+		pieDataset.setValue("Other", new Integer(25));
+
+		JFreeChart chart = ChartFactory.createPieChart3D("Sample Pie Chart", pieDataset, true, false, false);
+		chart.setBackgroundPaint(Color.white);
+
+		PiePlot3D plot = (PiePlot3D) chart.getPlot();
+		plot.setForegroundAlpha(0.6f);
+		plot.setDepthFactor(0.05);
+		plot.setCircular(true);
+		
+		ChartUtilities.saveChartAsPNG(new File(fileName), chart, width, height);
+	}
+	
+	
 	/************************************************************************************
 	 * create one image with given filename, given datatable etc.
 	 * 
