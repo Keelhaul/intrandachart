@@ -32,16 +32,15 @@ import de.intranda.commons.chart.results.DataRow;
 import de.intranda.commons.chart.results.DataTable;
 
 /*************************************************************************************
- * A renderer for painting the {@link DataTable} as chart
+ * A renderer for painting the {@link DataTable} as pie chart
  * 
  * @author Steffen Hankiewicz
- * @version 22.05.2009
+ * @version 15.06.2009
  *************************************************************************************/
 public class PieChartRenderer implements IRenderer {
 	private DataTable myDataTable;
 	private int width = 1024;
 	private int height = 800;
-	private boolean showMeanValues = false;
 
 	public void setDataTable(DataTable inDataTable) {
 		myDataTable = inDataTable;

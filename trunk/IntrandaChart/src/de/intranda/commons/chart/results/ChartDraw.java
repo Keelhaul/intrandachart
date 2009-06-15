@@ -372,7 +372,6 @@ public class ChartDraw {
 	 * draw unit label for chart
 	 ************************************************************************************/
 	private void drawUnitLabel() {
-		int unitHeight = fm.getHeight() + LEGENDPADDING;
 		int entryXPos = width / 2;
 		int entryYPos = height - legendHeight - LEGENDPADDING + fm.getHeight() / 2;
 		// show the text

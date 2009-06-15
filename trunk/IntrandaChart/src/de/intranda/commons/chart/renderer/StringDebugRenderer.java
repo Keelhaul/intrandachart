@@ -31,7 +31,6 @@ import de.intranda.commons.chart.results.DataTable;
  *************************************************************************************/
 public class StringDebugRenderer implements IRenderer {
 	private DataTable myDataTable;
-	private int digits = 0;
 	
 	public void setDataTable(DataTable inDataTable) {
 		myDataTable = inDataTable;
