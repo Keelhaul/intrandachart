@@ -38,36 +38,38 @@ import de.intranda.commons.chart.renderer.StringRenderer;
 import de.intranda.commons.chart.results.ChartDraw;
 import de.intranda.commons.chart.results.DataRow;
 import de.intranda.commons.chart.results.DataTable;
+import de.intranda.commons.chart.results.ChartDraw.ChartType;
+import de.intranda.commons.chart.results.ChartDraw.PointStyle;
 
 /*************************************************************************************
-  * Draw a chart and save it as a PNG image
+ * Draw a chart and save it as a PNG image
  * 
  * @author Karsten Köhler
  * @author Hendrik Söhnholz
  * @author Steffen Hankiewicz
- * @version 21.05.2009
+ * @author Andrey Kozhushkov
+ * @version 30.11.2009
  *************************************************************************************/
 public class MainCreatePNG {
 
 	/**
 	 * sample main programm
-	 *  
+	 * 
 	 * @param args
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
 		DataTable dt1 = getSampleDataTable1();
 		DataTable dt2 = dt1.getDataTableInverted();
-		
+
 		StringRenderer sr = new StringRenderer();
 		sr.setDataTable(dt1);
 		System.out.println(sr.getRendering());
-		
-		
+
 		StringRenderer sr1 = new StringRenderer();
 		sr1.setDataTable(dt2);
 		System.out.println(sr1.getRendering());
-		
+
 		createChart(getSampleDataTable1(), "image1.png", 1024, 768);
 		createChart(getSampleDataTable2(), "image2.png", 1024, 768);
 		createChart(getSampleDataTable3(), "image3.png", 1024, 768);
@@ -78,7 +80,7 @@ public class MainCreatePNG {
 		createChart(getSampleDataTable8(), "image8.png", 1024, 768);
 		createChart(getSampleDataTable9(), "image9.png", 1920, 1200);
 		createPieChart("image10.png", 1024, 768);
-		
+
 		System.out.println("fertig");
 	}
 
@@ -87,7 +89,7 @@ public class MainCreatePNG {
 	 * 
 	 * @param width width of the image
 	 * @param height height of the image
-	 * @throws IOException 
+	 * @throws IOException
 	 ************************************************************************************/
 	private static void createPieChart(String fileName, int width, int height) throws IOException {
 		DefaultPieDataset pieDataset = new DefaultPieDataset();
@@ -96,34 +98,33 @@ public class MainCreatePNG {
 
 		JFreeChart chart = ChartFactory.createPieChart3D("Sample Pie Chart", pieDataset, true, false, false);
 		chart.setBackgroundPaint(Color.white);
-		
+
 		PiePlot3D plot = (PiePlot3D) chart.getPlot();
 		plot.setBackgroundPaint(Color.white);
 		plot.setForegroundAlpha(0.6f);
 		plot.setDepthFactor(0.05);
 		plot.setCircular(true);
-		
+
 		ChartUtilities.saveChartAsPNG(new File(fileName), chart, width, height);
 	}
-	
-	
+
 	/************************************************************************************
 	 * create one image with given filename, given datatable etc.
 	 * 
 	 * @param g2d instance of {@link Graphics2D}
 	 * @param width width of the image
 	 * @param height height of the image
-	 * @throws IOException 
+	 * @throws IOException
 	 ************************************************************************************/
 	private static void createChart(DataTable dataTable, String fileName, int width, int height) throws IOException {
 		BufferedImage image = generateImage(dataTable, width, height);
 		File outputfile = new File(fileName);
 		ImageIO.write(image, "png", outputfile);
 
-		//		FileOutputStream fo = new FileOutputStream("imageAsStream.png");
-		//		ImageIO.write(image, "png", fo);
-		//		fo.flush();
-		//		fo.close();
+		// FileOutputStream fo = new FileOutputStream("imageAsStream.png");
+		// ImageIO.write(image, "png", fo);
+		// fo.flush();
+		// fo.close();
 	}
 
 	/************************************************************************************
@@ -139,7 +140,7 @@ public class MainCreatePNG {
 		Graphics2D g2d = image.createGraphics();
 		g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
 
-		ChartDraw chartDraw = new ChartDraw(dataTable, g2d, width, height);
+		ChartDraw chartDraw = new ChartDraw(dataTable, g2d, width, height, ChartType.LINE, PointStyle.CIRCLE);
 		chartDraw.showAllMeanValues(true);
 		chartDraw.paint();
 		return image;
@@ -269,15 +270,14 @@ public class MainCreatePNG {
 		String title = new String("Some sample data 8");
 		DataTable dataTable = new DataTable(title);
 		dataTable.setUnitLabel("some unit");
-		
+
 		DataRow row = new DataRow("null");
 		row.addValue("Anlegen eines Prozesses (auf Bandebene)", 6.0);
 		row.addValue("Archivierung", 7.0);
 		row.addValue("Auslieferung", 4.0);
 		row.addValue("Automatische Generierung der SICI", 19.0);
 		row.addValue("Bandweise Endkontrolle und Freigabe aller Metadaten", 18.0);
-		row.addValue("Bearbeitung der bibliographischen Metadaten auf Artikelebene (Transliterierung / Übersetzung)",
-			15.0);
+		row.addValue("Bearbeitung der bibliographischen Metadaten auf Artikelebene (Transliterierung / Übersetzung)", 15.0);
 		row.addValue("Bestandsaufnahme der gedruckten Version", 2.0);
 		row.addValue("bibliographische Arbeiten (GBV, ZDB, Buchbestellung)", 0.0);
 		row.addValue("Bibliographische Aufnahme", 1.0);
@@ -288,9 +288,9 @@ public class MainCreatePNG {
 		row.addValue("Datenübernahme - RezensionsZeitschriftenDB", 4.0);
 		row.addValue("Erfassung", 1.0);
 		row
-			.addValue(
-				"Erfassung der Struktur-Metadaten (Erfassung der Seitenpaginierung, Nacherfassung fehlender Strukturen, Erstellung Metadaten-Strukturbaum)",
-				17.0);
+				.addValue(
+						"Erfassung der Struktur-Metadaten (Erfassung der Seitenpaginierung, Nacherfassung fehlender Strukturen, Erstellung Metadaten-Strukturbaum)",
+						17.0);
 		row.addValue("Erstellung des MasterImageSets (automatisch)", 4.0);
 		row.addValue("Export", 6.0);
 		row.addValue("Export der Daten in DMS", 6.0);
@@ -335,6 +335,7 @@ public class MainCreatePNG {
 	 ************************************************************************************/
 	private static DataRow getSampleRow1() {
 		DataRow row = new DataRow("2007");
+		row.setShowPoint(false);
 		row.addValue(new String("Januar"), new Double(5.0));
 		row.addValue(new String("Februar"), new Double(10.0));
 		row.addValue(new String("März"), new Double(21.7));

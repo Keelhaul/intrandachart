@@ -25,18 +25,23 @@ import java.awt.image.BufferedImage;
 
 import de.intranda.commons.chart.results.ChartDraw;
 import de.intranda.commons.chart.results.DataTable;
+import de.intranda.commons.chart.results.ChartDraw.ChartType;
+import de.intranda.commons.chart.results.ChartDraw.PointStyle;
 
 /*************************************************************************************
  * A renderer for painting the {@link DataTable} as chart
  * 
  * @author Steffen Hankiewicz
- * @version 22.05.2009
+ * @author Andrey Kozhushkov
+ * @version 30.11.2009
  *************************************************************************************/
 public class ChartRenderer implements IRenderer {
 	private DataTable myDataTable;
 	private int width = 1024;
 	private int height = 800;
 	private boolean showMeanValues = false;
+	private ChartType chartType = null;
+	private PointStyle pointStyle = null;
 
 	public void setDataTable(DataTable inDataTable) {
 		myDataTable = inDataTable;
@@ -60,7 +65,7 @@ public class ChartRenderer implements IRenderer {
 		Graphics2D g2d = image.createGraphics();
 		g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
 
-		ChartDraw chartDraw = new ChartDraw(myDataTable, g2d, width, height);
+		ChartDraw chartDraw = new ChartDraw(myDataTable, g2d, width, height, chartType, pointStyle);
 		chartDraw.showAllMeanValues(showMeanValues);
 		chartDraw.paint();
 		return image;
@@ -69,10 +74,8 @@ public class ChartRenderer implements IRenderer {
 	/*************************************************************************************
 	 * setter for image size
 	 * 
-	 * @param width
-	 *            with size to set as width
-	 * @param height
-	 *            with size to set as height
+	 * @param width with size to set as width
+	 * @param height with size to set as height
 	 *************************************************************************************/
 	public void setSize(Integer width, Integer height) {
 		this.width = width;
@@ -82,8 +85,7 @@ public class ChartRenderer implements IRenderer {
 	/*************************************************************************************
 	 * setter for showing mean values
 	 * 
-	 * @param inShowMeanValues
-	 *            for showing or hiding mean values in chart
+	 * @param inShowMeanValues for showing or hiding mean values in chart
 	 *************************************************************************************/
 	public void setShowMeanValues(Boolean inShowMeanValues) {
 		showMeanValues = inShowMeanValues;
@@ -92,8 +94,7 @@ public class ChartRenderer implements IRenderer {
 	/*************************************************************************************
 	 * setter for pattern of number format
 	 * 
-	 * @param inPattern
-	 *            to set
+	 * @param inPattern to set
 	 *************************************************************************************/
 	public void setFormatPattern(String inPattern) {
 
@@ -106,5 +107,41 @@ public class ChartRenderer implements IRenderer {
 	 *************************************************************************************/
 	public DataTable getDataTable() {
 		return myDataTable;
+	}
+
+	/*************************************************************************************
+	 * getter for chartType
+	 * 
+	 * @return {@link ChartType}
+	 *************************************************************************************/
+	public ChartType getChartType() {
+		return chartType;
+	}
+
+	/*************************************************************************************
+	 * setter for chartType
+	 * 
+	 * @param charType the ChartType to set
+	 *************************************************************************************/
+	public void setChartType(ChartType chartType) {
+		this.chartType = chartType;
+	}
+
+	/*************************************************************************************
+	 * getter for pointStyle
+	 * 
+	 * @return {@link PointStyle}
+	 *************************************************************************************/
+	public PointStyle getPointStyle() {
+		return pointStyle;
+	}
+
+	/*************************************************************************************
+	 * setter for pointStyle
+	 * 
+	 * @param pointStyle the PointStyle to set
+	 *************************************************************************************/
+	public void setPointStyle(PointStyle pointStyle) {
+		this.pointStyle = pointStyle;
 	}
 }

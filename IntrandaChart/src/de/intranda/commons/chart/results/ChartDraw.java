@@ -25,22 +25,32 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 /*************************************************************************************
- * ChartDraw class creates and paints the chart depending on given parameters
- * the value parameters are transfered as {@link DataTable}-Object. width and
- * height have to be set as pixel
+ * ChartDraw class creates and paints the chart depending on given parameters the value parameters are transfered as
+ * {@link DataTable}-Object. width and height have to be set as pixel
  * 
  * @author Karsten Köhler
  * @author Hendrik Söhnholz
  * @author Steffen Hankiewicz
- * @version 21.05.2009
- * *************************************************************************************/
+ * @author Andrey Kozhushkov
+ * @version 30.11.2009 *
+ ************************************************************************************/
 public class ChartDraw {
+
+	public enum ChartType {
+		BAR, LINE;
+	}
+
+	public enum PointStyle {
+		CIRCLE, SQUARE;
+	}
 
 	private Graphics2D g2d;
 	private DataTable dataTable;
@@ -61,8 +71,7 @@ public class ChartDraw {
 	private static final int LEGENDPADDING = 5;
 
 	/*
-	 * total width of all strings shown in the legend including padding and
-	 * space for the colored box
+	 * total width of all strings shown in the legend including padding and space for the colored box
 	 */
 	private int totalLegendStringWidth;
 
@@ -94,24 +103,24 @@ public class ChartDraw {
 	private int nColors;
 	private ArrayList<Color> chartColors;
 	private FontMetrics fm;
+	private ChartType chartType;
+	private PointStyle pointStyle;
 
 	/************************************************************************************
 	 * Instantiates a new chart draw.
 	 * 
-	 * @param inDataTable
-	 *            the {@link DataTable} (contains the {@link DataRow}-objects)
-	 * @param g2d
-	 *            the {@link Graphics2D}-object, where to paint
-	 * @param width
-	 *            the width of the image
-	 * @param height
-	 *            the height of the image
+	 * @param inDataTable the {@link DataTable} (contains the {@link DataRow}-objects)
+	 * @param g2d the {@link Graphics2D}-object, where to paint
+	 * @param width the width of the image
+	 * @param height the height of the image
 	 ************************************************************************************/
-	public ChartDraw(DataTable inDataTable, Graphics2D g2d, int width, int height) {
+	public ChartDraw(DataTable inDataTable, Graphics2D g2d, int width, int height, ChartType chartType, PointStyle pointStyle) {
 		this.dataTable = inDataTable;
 		this.g2d = g2d;
 		this.width = width;
 		this.height = height;
+		this.chartType = chartType;
+		this.pointStyle = pointStyle;
 
 		// define colors
 		this.chartColors = new ArrayList<Color>();
@@ -127,6 +136,14 @@ public class ChartDraw {
 		chartColors.add(new Color(230, 50, 220)); // pink
 		chartColors.add(new Color(0, 190, 150)); // mint green
 		nColors = chartColors.size();
+
+		if (chartType == null) {
+			chartType = ChartType.BAR;
+		}
+
+		if (pointStyle == null) {
+			pointStyle = PointStyle.SQUARE;
+		}
 
 		fm = g2d.getFontMetrics();
 
@@ -147,8 +164,8 @@ public class ChartDraw {
 		}
 
 		/*
-		 * use the strings from the first DataRow for the labels on the x-axis
-		 * determine maximum string width and set the bottom border accordingly
+		 * use the strings from the first DataRow for the labels on the x-axis determine maximum string width and set the
+		 * bottom border accordingly
 		 */
 		xMaxTickMarkWidth = 0;
 		DataRow firstRow = dataTable.getDataRows().get(0);
@@ -163,8 +180,7 @@ public class ChartDraw {
 		}
 
 		/*
-		 * choose ticks on the y-axis determine maximum y-value and set
-		 * yGridWidth
+		 * choose ticks on the y-axis determine maximum y-value and set yGridWidth
 		 */
 		int powerOfTen = (int) Math.pow(10.0, Math.floor(Math.log10(dataTable.getMaxValue())));
 		yMaxTick = (int) (Math.floor((dataTable.getMaxValue() / powerOfTen)) * powerOfTen);
@@ -209,8 +225,7 @@ public class ChartDraw {
 		xGridWidth = chartWidth / xtickMarks.size();
 
 		/*
-		 * set bottom border depending on the text on the x-axis (rotated by 45
-		 * degree or horizontal)
+		 * set bottom border depending on the text on the x-axis (rotated by 45 degree or horizontal)
 		 */
 		if (xMaxTickMarkWidth > xGridWidth / 2) {
 			borderBottom = 2 * xMaxTickMarkWidth / 3 + 2 * fm.getHeight();
@@ -219,22 +234,18 @@ public class ChartDraw {
 		}
 
 		/*
-		 * if there is more than one SimpleDataSet a legend is to be shown;
-		 * determine size of the legend
+		 * if there is more than one SimpleDataSet a legend is to be shown; determine size of the legend
 		 */
 		if (dataTable.getDataRows().size() > 1) {
 			/*
-			 * determine total string width of titles inside legend and set the
-			 * legend width and height appropriately
+			 * determine total string width of titles inside legend and set the legend width and height appropriately
 			 */
 			totalLegendStringWidth = 0;
 			for (DataRow row : dataTable.getDataRows()) {
 				/*
-				 * border on each side of the legend + space for colored boxes +
-				 * padding between different titles
+				 * border on each side of the legend + space for colored boxes + padding between different titles
 				 */
-				totalLegendStringWidth += LEGENDPADDING + fm.getHeight() + fm.stringWidth(row.getName()) + 2
-						* LEGENDPADDING;
+				totalLegendStringWidth += LEGENDPADDING + fm.getHeight() + fm.stringWidth(row.getName()) + 2 * LEGENDPADDING;
 			}
 			if (totalLegendStringWidth > chartWidth) {
 				// do line wrapping inside legend
@@ -279,14 +290,33 @@ public class ChartDraw {
 		// read SimpleDataSets and draw the chart
 		for (int d = 0; d < dataTable.getDataRows().size(); d++) {
 			DataRow row = dataTable.getDataRows().get(d);
+
 			// draw the bars
 			int size = row.getNumberValues();
 
-			for (int i = 0; i < size; i++) {
-				drawBar(borderLeft + 0.25 * xGridWidth + (d + 0.5)
-						* (0.5 * xGridWidth / dataTable.getDataRows().size()) + i * chartWidth / xtickMarks.size(), 0.5
-						* xGridWidth / dataTable.getDataRows().size(), row.getValue(i) * chartHeight / yMaxValue - 1,
-					getColorByIndex(d));
+			switch (chartType) {
+			case BAR:
+				for (int i = 0; i < size; i++) {
+					drawBar(borderLeft + 0.25 * xGridWidth + (d + 0.5) * (0.5 * xGridWidth / dataTable.getDataRows().size()) + i * chartWidth
+							/ xtickMarks.size(), 0.5 * xGridWidth / dataTable.getDataRows().size(), row.getValue(i) * chartHeight / yMaxValue - 1,
+							getColorByIndex(d));
+				}
+				break;
+			case LINE:
+				for (int i = 0; i < size; i++) {
+					if (row.isShowPoint()) {
+						drawPoint(borderLeft + 0.5 * xGridWidth + i * (width - borderLeft - BORDERRIGHT) / xtickMarks.size(), chartBottom
+								- (row.getValue(i) * chartHeight / yMaxValue - 1), getColorByIndex(d), pointStyle);
+					}
+					if (i > 0) {
+						drawLine(borderLeft + 0.5 * xGridWidth + (i - 1) * (width - borderLeft - BORDERRIGHT) / xtickMarks.size(), chartBottom
+								- (row.getValue(i - 1) * chartHeight / yMaxValue - 1), borderLeft + 0.5 * xGridWidth + i
+								* (width - borderLeft - BORDERRIGHT) / xtickMarks.size(), chartBottom
+								- (row.getValue(i) * chartHeight / yMaxValue - 1), 1, getColorByIndex(d), "-");
+					}
+
+				}
+				break;
 			}
 		}
 
@@ -337,8 +367,8 @@ public class ChartDraw {
 
 		// draw a box around the legend
 		g2d.setColor(Color.black);
-		g2d.draw(new Rectangle2D.Double(width / 2 - legendWidth / 2, height - legendHeightDependingOnUnitLabel
-				- LEGENDPADDING, legendWidth, legendHeightDependingOnUnitLabel));
+		g2d.draw(new Rectangle2D.Double(width / 2 - legendWidth / 2, height - legendHeightDependingOnUnitLabel - LEGENDPADDING, legendWidth,
+				legendHeightDependingOnUnitLabel));
 
 		// if the text is too long move it to the next line
 		entryXPos = width / 2 - legendWidth / 2 + LEGENDPADDING;
@@ -347,17 +377,17 @@ public class ChartDraw {
 			DataRow row = dataTable.getDataRows().get(d);
 
 			// text too long?
-			if (entryXPos + fm.getHeight() + fm.stringWidth(row.getName()) + 2 * LEGENDPADDING > width / 2
-					+ legendWidth / 2) {
+			if (entryXPos + fm.getHeight() + fm.stringWidth(row.getName()) + 2 * LEGENDPADDING > width / 2 + legendWidth / 2) {
 				// move on to the next line
 				entryXPos = width / 2 - legendWidth / 2 + LEGENDPADDING;
 				entryYPos += fm.getHeight();
 			}
 
 			// draw a colored box
-			g2d.setColor(getColorByIndex(d));
-			g2d.fill(new Rectangle2D.Double(entryXPos + fm.getHeight() / 4, entryYPos - fm.getHeight() / 4, fm
-				.getHeight() / 2, fm.getHeight() / 2));
+			drawPoint(entryXPos + fm.getHeight() / 2, entryYPos, getColorByIndex(d), pointStyle);
+			// g2d.setColor(getColorByIndex(d));
+			// g2d.fill(new Rectangle2D.Double(entryXPos + fm.getHeight() / 4, entryYPos - fm.getHeight() / 4, fm.getHeight()
+			// / 2, fm.getHeight() / 2));
 			entryXPos += fm.getHeight();
 
 			// show the text
@@ -392,32 +422,68 @@ public class ChartDraw {
 	/*************************************************************************************
 	 * Draw bar.
 	 * 
-	 * @param xpos
-	 *            the x-position
-	 * @param width
-	 *            the width of the bar
-	 * @param barsize
-	 *            the height of the bar
-	 * @param col
-	 *            the color of the bar
+	 * @param xpos the x-position
+	 * @param width the width of the bar
+	 * @param barsize the height of the bar
+	 * @param col the color of the bar
 	 *************************************************************************************/
 	private void drawBar(double xpos, double width, double barsize, Color col) {
-		GradientPaint verlauf = new GradientPaint((int) xpos, borderTop, col, (int) xpos, (int) (2.0 * chartHeight),
-			Color.white);
+		GradientPaint verlauf = new GradientPaint((int) xpos, borderTop, col, (int) xpos, (int) (2.0 * chartHeight), Color.white);
 
 		g2d.setPaint(verlauf);
 		g2d.fill(new Rectangle2D.Double(xpos - 0.5 * width, chartBottom - barsize, width, barsize));
 	}
 
+	/*************************************************************************************
+	 * Draw point.
+	 * 
+	 * @param xpos the x-position
+	 * @param ypos the y-position
+	 * @param col the color of the point
+	 * @param style the style of the point (circle or square)
+	 *************************************************************************************/
+	private void drawPoint(double xpos, double ypos, Color col, PointStyle style) {
+		if (style == PointStyle.CIRCLE) {
+			g2d.setPaint(col);
+			g2d.fill(new Ellipse2D.Double(xpos - fm.getHeight() / 4, ypos - fm.getHeight() / 4, fm.getHeight() / 2, fm.getHeight() / 2));
+		} else if (style == PointStyle.SQUARE) {
+			g2d.setPaint(col);
+			g2d.fill(new Rectangle.Double(xpos - fm.getHeight() / 4, ypos - fm.getHeight() / 4, fm.getHeight() / 2, fm.getHeight() / 2));
+		}
+	}
+
+	/*************************************************************************************
+	 * Draw line.
+	 * 
+	 * @param x1 the x-position of the origin
+	 * @param y1 the y-position of the origin
+	 * @param x2 the x-position of the destination
+	 * @param y2 the y-position of the destination
+	 * @param width width of the line
+	 * @param col the color of the line
+	 * @param style the style of the line
+	 *************************************************************************************/
+	private void drawLine(double x1, double y1, double x2, double y2, float width, Color col, String style) {
+		if (style != null) {
+			if (style.equals("-")) {
+			} else if (style.equals("--")) {
+				float dash1[] = { 10.0f, 2.0f };
+				BasicStroke dashed = new BasicStroke(width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f);
+				g2d.setStroke(dashed);
+			} else if (style.equals(":")) {
+
+			}
+		}
+		g2d.setColor(col);
+		g2d.draw(new Line2D.Double(x1, y1, x2, y2));
+	}
+
 	/************************************************************************************
 	 * Draw centered string.
 	 * 
-	 * @param str
-	 *            the string to show
-	 * @param xpos
-	 *            the x-position (middle of string)
-	 * @param ypos
-	 *            the y-position
+	 * @param str the string to show
+	 * @param xpos the x-position (middle of string)
+	 * @param ypos the y-position
 	 ************************************************************************************/
 	private void drawCenteredString(String str, double xpos, double ypos) {
 		g2d.drawString(str, (int) (xpos - fm.stringWidth(str) / 2.0), (int) (ypos + 0.5 * fm.getAscent() - 1));
@@ -426,12 +492,9 @@ public class ChartDraw {
 	/************************************************************************************
 	 * Draw right aligned string.
 	 * 
-	 * @param str
-	 *            the string to show
-	 * @param xpos
-	 *            the x-position (end of string)
-	 * @param ypos
-	 *            the y-position
+	 * @param str the string to show
+	 * @param xpos the x-position (end of string)
+	 * @param ypos the y-position
 	 ************************************************************************************/
 	private void drawRightAlignedString(String str, double xpos, double ypos) {
 		g2d.drawString(str, (int) (xpos - fm.stringWidth(str)), (int) (ypos + 0.5 * fm.getAscent() - 1));
@@ -440,12 +503,9 @@ public class ChartDraw {
 	/************************************************************************************
 	 * Draw left aligned string.
 	 * 
-	 * @param str
-	 *            the string to show
-	 * @param xpos
-	 *            the x-position (start of string)
-	 * @param ypos
-	 *            the y-position
+	 * @param str the string to show
+	 * @param xpos the x-position (start of string)
+	 * @param ypos the y-position
 	 ************************************************************************************/
 	private void drawLeftAlignedString(String str, double xpos, double ypos) {
 		g2d.drawString(str, (int) (xpos), (int) (ypos + 0.5 * fm.getAscent() - 1));
@@ -454,8 +514,7 @@ public class ChartDraw {
 	/************************************************************************************
 	 * Draw mean line
 	 * 
-	 * @param meanValue
-	 *            the mean value as double
+	 * @param meanValue the mean value as double
 	 ************************************************************************************/
 	private void drawMeanLine(double meanValue, Color inColor) {
 		float dash1[] = { 7.0f };
@@ -476,8 +535,8 @@ public class ChartDraw {
 		int s;
 
 		/*
-		 * distance between marker texts on the x-axis (show the text only on
-		 * every n-th tick); The default is to show it on each tick.
+		 * distance between marker texts on the x-axis (show the text only on every n-th tick); The default is to show it on
+		 * each tick.
 		 */
 		int xMarkerTextDistance = 1;
 
@@ -493,15 +552,14 @@ public class ChartDraw {
 			float dash1[] = { 2.0f };
 			BasicStroke dashed = new BasicStroke(0.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f);
 			g2d.setStroke(dashed);
-			g2d.draw(new Line2D.Double(borderLeft, chartBottom - (i + 1) * yGridWidth * chartHeight / yMaxValue, width
-					- BORDERRIGHT, chartBottom - (i + 1) * yGridWidth * chartHeight / yMaxValue));
+			g2d.draw(new Line2D.Double(borderLeft, chartBottom - (i + 1) * yGridWidth * chartHeight / yMaxValue, width - BORDERRIGHT, chartBottom
+					- (i + 1) * yGridWidth * chartHeight / yMaxValue));
 
 			// ticks and numbers
 			g2d.setStroke(new BasicStroke());
-			g2d.draw(new Line2D.Double(borderLeft - 5, chartBottom - (i + 1) * yGridWidth * chartHeight / yMaxValue,
-				borderLeft + 5, chartBottom - (i + 1) * yGridWidth * chartHeight / yMaxValue));
-			drawRightAlignedString(ytickMarks.get(i), borderLeft - fm.getHeight(), chartBottom - (i + 1) * yGridWidth
-					* chartHeight / yMaxValue);
+			g2d.draw(new Line2D.Double(borderLeft - 5, chartBottom - (i + 1) * yGridWidth * chartHeight / yMaxValue, borderLeft + 5, chartBottom
+					- (i + 1) * yGridWidth * chartHeight / yMaxValue));
+			drawRightAlignedString(ytickMarks.get(i), borderLeft - fm.getHeight(), chartBottom - (i + 1) * yGridWidth * chartHeight / yMaxValue);
 		}
 
 		// x-axis
@@ -513,8 +571,7 @@ public class ChartDraw {
 			xMarkerTextDistance = 1;
 		} else {
 			/*
-			 * not enough room to show text on each tick; multiply distance by 2
-			 * to add some free space
+			 * not enough room to show text on each tick; multiply distance by 2 to add some free space
 			 */
 			xMarkerTextDistance *= 2;
 		}
@@ -522,13 +579,11 @@ public class ChartDraw {
 		s = xtickMarks.size();
 		for (int i = 0; i < s; i++) {
 			// ticks
-			g2d.draw(new Line2D.Double(borderLeft + 0.5 * xGridWidth + i * (width - borderLeft - BORDERRIGHT) / s,
-				chartBottom + 7, borderLeft + 0.5 * xGridWidth + i * (width - borderLeft - BORDERRIGHT) / s,
-				chartBottom));
+			g2d.draw(new Line2D.Double(borderLeft + 0.5 * xGridWidth + i * (width - borderLeft - BORDERRIGHT) / s, chartBottom + 7, borderLeft + 0.5
+					* xGridWidth + i * (width - borderLeft - BORDERRIGHT) / s, chartBottom));
 
 			/*
-			 * rotate text by 45 degree if there's not enough space to show it
-			 * horizontal
+			 * rotate text by 45 degree if there's not enough space to show it horizontal
 			 */
 			if (xMaxTickMarkWidth > xGridWidth / 2) {
 				if (i % xMarkerTextDistance == 0) {
@@ -536,15 +591,15 @@ public class ChartDraw {
 							* (width - borderLeft - BORDERRIGHT) / s, chartBottom + fm.getHeight());
 					g2d.transform(at);
 
-					drawRightAlignedString(xtickMarks.get(i), borderLeft + 0.5 * xGridWidth + i
-							* (width - borderLeft - BORDERRIGHT) / s, chartBottom + fm.getHeight());
-					at = AffineTransform.getRotateInstance(Math.toRadians(45), borderLeft + 0.5 * xGridWidth + i
-							* (width - borderLeft - BORDERRIGHT) / s, chartBottom + fm.getHeight());
+					drawRightAlignedString(xtickMarks.get(i), borderLeft + 0.5 * xGridWidth + i * (width - borderLeft - BORDERRIGHT) / s, chartBottom
+							+ fm.getHeight());
+					at = AffineTransform.getRotateInstance(Math.toRadians(45), borderLeft + 0.5 * xGridWidth + i * (width - borderLeft - BORDERRIGHT)
+							/ s, chartBottom + fm.getHeight());
 					g2d.transform(at);
 				}
 			} else {
-				drawCenteredString(xtickMarks.get(i), borderLeft + 0.5 * xGridWidth + i
-						* (width - borderLeft - BORDERRIGHT) / s, chartBottom + fm.getHeight());
+				drawCenteredString(xtickMarks.get(i), borderLeft + 0.5 * xGridWidth + i * (width - borderLeft - BORDERRIGHT) / s, chartBottom
+						+ fm.getHeight());
 			}
 		}
 	}
@@ -552,10 +607,8 @@ public class ChartDraw {
 	/************************************************************************************
 	 * Show or hide mean value for specific {@link DataRow}
 	 * 
-	 * @param dataRowIndex
-	 *            the SimpleDataSet index
-	 * @param show
-	 *            given Boolean, if all MeanValues should be shown
+	 * @param dataRowIndex the SimpleDataSet index
+	 * @param show given Boolean, if all MeanValues should be shown
 	 ************************************************************************************/
 	public void showMeanValue(Integer dataRowIndex, Boolean show) {
 		dataTable.getDataRows().get(dataRowIndex).setShowMeanValue(show);
@@ -564,8 +617,7 @@ public class ChartDraw {
 	/************************************************************************************
 	 * Show or hide all mean values
 	 * 
-	 * @param show
-	 *            given Boolean, if all MeanValues should be shown
+	 * @param show given Boolean, if all MeanValues should be shown
 	 ************************************************************************************/
 	public void showAllMeanValues(Boolean show) {
 		for (DataRow row : dataTable.getDataRows()) {
@@ -576,8 +628,7 @@ public class ChartDraw {
 	/************************************************************************************
 	 * Choose color for specific {@link DataRow}
 	 * 
-	 * @param simpledataSetIndex
-	 *            the SimpleDataSet index
+	 * @param simpledataSetIndex the SimpleDataSet index
 	 * @return the color as {@link Color}
 	 ************************************************************************************/
 	private Color getColorByIndex(Integer simpledataSetIndex) {
