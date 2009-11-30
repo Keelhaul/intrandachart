@@ -31,7 +31,8 @@ import java.util.List;
  * @author Karsten Köhler
  * @author Hendrik Söhnholz
  * @author Steffen Hankiewicz
- * @version 21.05.2009
+ * @author Andrey Kozhushkov
+ * @version 30.11.2009
  * 
  * @see DataTable
  * *************************************************************************************/
@@ -39,6 +40,7 @@ public class DataRow implements Serializable {
 	private static final long serialVersionUID = -2323261239936314945L;
 	private String name;
 	private boolean showMeanValue;
+	private boolean showPoint = true;
 	private final static int maxShortNameLength = 30;
 
 	private List<String> labels;
@@ -215,6 +217,14 @@ public class DataRow implements Serializable {
 	 **************************************************************************************/
 	public void setShowMeanValue(boolean showMeanValue) {
 		this.showMeanValue = showMeanValue;
+	}
+
+	public boolean isShowPoint() {
+		return showPoint;
+	}
+
+	public void setShowPoint(boolean showPoint) {
+		this.showPoint = showPoint;
 	}
 
 	public Boolean isContainsLabel(String inLabel) {
