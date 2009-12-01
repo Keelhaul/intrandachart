@@ -25,6 +25,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -140,7 +142,12 @@ public class MainCreatePNG {
 		Graphics2D g2d = image.createGraphics();
 		g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
 
-		ChartDraw chartDraw = new ChartDraw(dataTable, g2d, width, height, ChartType.LINE, PointStyle.CIRCLE);
+		List<Color> customColorList = new ArrayList<Color>();
+		customColorList.add(new Color(70, 40, 0)); // brown
+		customColorList.add(new Color(230, 50, 220)); // pink
+		customColorList.add(new Color(0, 190, 150)); // mint green
+
+		ChartDraw chartDraw = new ChartDraw(dataTable, g2d, width, height, ChartType.LINE, PointStyle.CIRCLE, customColorList);
 		chartDraw.showAllMeanValues(true);
 		chartDraw.paint();
 		return image;

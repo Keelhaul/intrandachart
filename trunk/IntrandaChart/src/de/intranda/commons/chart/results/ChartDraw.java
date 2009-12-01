@@ -31,6 +31,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.List;
 
 /*************************************************************************************
  * ChartDraw class creates and paints the chart depending on given parameters the value parameters are transfered as
@@ -101,7 +102,7 @@ public class ChartDraw {
 	private int yMaxValue;
 
 	private int nColors;
-	private ArrayList<Color> chartColors;
+	private List<Color> chartColors;
 	private FontMetrics fm;
 	private ChartType chartType;
 	private PointStyle pointStyle;
@@ -114,27 +115,31 @@ public class ChartDraw {
 	 * @param width the width of the image
 	 * @param height the height of the image
 	 ************************************************************************************/
-	public ChartDraw(DataTable inDataTable, Graphics2D g2d, int width, int height, ChartType chartType, PointStyle pointStyle) {
+	public ChartDraw(DataTable inDataTable, Graphics2D g2d, int width, int height, ChartType chartType, PointStyle pointStyle,
+			List<Color> customColors) {
 		this.dataTable = inDataTable;
 		this.g2d = g2d;
 		this.width = width;
 		this.height = height;
 		this.chartType = chartType;
 		this.pointStyle = pointStyle;
+		this.chartColors = customColors;
 
-		// define colors
-		this.chartColors = new ArrayList<Color>();
+		if (chartColors == null || chartColors.isEmpty()) {
+			// define colors
+			chartColors = new ArrayList<Color>();
+			chartColors.add(new Color(200, 0, 0)); // red
+			chartColors.add(new Color(0, 0, 200)); // blue
+			chartColors.add(new Color(250, 220, 50)); // yellow
+			chartColors.add(new Color(0, 130, 80)); // green
+			chartColors.add(new Color(150, 0, 210)); // violett
+			chartColors.add(new Color(240, 140, 0)); // orange
+			chartColors.add(new Color(50, 150, 240)); // light blue
+			chartColors.add(new Color(70, 40, 0)); // brown
+			chartColors.add(new Color(230, 50, 220)); // pink
+			chartColors.add(new Color(0, 190, 150)); // mint green
+		}
 
-		chartColors.add(new Color(200, 0, 0)); // red
-		chartColors.add(new Color(0, 0, 200)); // blue
-		chartColors.add(new Color(250, 220, 50)); // yellow
-		chartColors.add(new Color(0, 130, 80)); // green
-		chartColors.add(new Color(150, 0, 210)); // violett
-		chartColors.add(new Color(240, 140, 0)); // orange
-		chartColors.add(new Color(50, 150, 240)); // light blue
-		chartColors.add(new Color(70, 40, 0)); // brown
-		chartColors.add(new Color(230, 50, 220)); // pink
-		chartColors.add(new Color(0, 190, 150)); // mint green
 		nColors = chartColors.size();
 
 		if (chartType == null) {

@@ -20,8 +20,10 @@
  */
 package de.intranda.commons.chart.renderer;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import de.intranda.commons.chart.results.ChartDraw;
 import de.intranda.commons.chart.results.DataTable;
@@ -33,7 +35,7 @@ import de.intranda.commons.chart.results.ChartDraw.PointStyle;
  * 
  * @author Steffen Hankiewicz
  * @author Andrey Kozhushkov
- * @version 30.11.2009
+ * @version 01.12.2009
  *************************************************************************************/
 public class ChartRenderer implements IRenderer {
 	private DataTable myDataTable;
@@ -42,6 +44,7 @@ public class ChartRenderer implements IRenderer {
 	private boolean showMeanValues = false;
 	private ChartType chartType = null;
 	private PointStyle pointStyle = null;
+	private List<Color> colors = null;
 
 	public void setDataTable(DataTable inDataTable) {
 		myDataTable = inDataTable;
@@ -65,7 +68,7 @@ public class ChartRenderer implements IRenderer {
 		Graphics2D g2d = image.createGraphics();
 		g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
 
-		ChartDraw chartDraw = new ChartDraw(myDataTable, g2d, width, height, chartType, pointStyle);
+		ChartDraw chartDraw = new ChartDraw(myDataTable, g2d, width, height, chartType, pointStyle, colors);
 		chartDraw.showAllMeanValues(showMeanValues);
 		chartDraw.paint();
 		return image;
@@ -143,5 +146,23 @@ public class ChartRenderer implements IRenderer {
 	 *************************************************************************************/
 	public void setPointStyle(PointStyle pointStyle) {
 		this.pointStyle = pointStyle;
+	}
+
+	/*************************************************************************************
+	 * getter for colors
+	 * 
+	 * @return a list of {@link Color}s
+	 *************************************************************************************/
+	public List<Color> getColors() {
+		return colors;
+	}
+
+	/*************************************************************************************
+	 * setter for colors
+	 * 
+	 * @param colors the List<Color to set
+	 *************************************************************************************/
+	public void setColors(List<Color> colors) {
+		this.colors = colors;
 	}
 }
