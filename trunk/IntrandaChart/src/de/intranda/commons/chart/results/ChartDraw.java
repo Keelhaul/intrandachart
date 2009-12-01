@@ -114,6 +114,9 @@ public class ChartDraw {
 	 * @param g2d the {@link Graphics2D}-object, where to paint
 	 * @param width the width of the image
 	 * @param height the height of the image
+	 * @param chartType the type of the chart to draw (bar or line)
+	 * @param pointStyle the style of points in the legend and line charts (circle or square)
+	 * @param customColors optional <code>List</code> of custom <code>Color</code>s
 	 ************************************************************************************/
 	public ChartDraw(DataTable inDataTable, Graphics2D g2d, int width, int height, ChartType chartType, PointStyle pointStyle,
 			List<Color> customColors) {
