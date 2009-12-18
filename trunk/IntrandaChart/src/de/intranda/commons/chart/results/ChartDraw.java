@@ -145,12 +145,12 @@ public class ChartDraw {
 
 		nColors = chartColors.size();
 
-		if (chartType == null) {
-			chartType = ChartType.BAR;
+		if (this.chartType == null) {
+			this.chartType = ChartType.BAR;
 		}
 
-		if (pointStyle == null) {
-			pointStyle = PointStyle.SQUARE;
+		if (this.pointStyle == null) {
+			this.pointStyle = PointStyle.SQUARE;
 		}
 
 		fm = g2d.getFontMetrics();
