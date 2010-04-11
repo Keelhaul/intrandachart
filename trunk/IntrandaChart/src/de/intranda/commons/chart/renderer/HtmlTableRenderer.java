@@ -64,7 +64,7 @@ public class HtmlTableRenderer implements IRenderer {
 		} else {
 			sb.append(myDataTable.getUnitLabel());
 		}
-		sb.append("</th class=\"standardTable_Header\">");
+		sb.append("</th>");
 		DataRow firstrow = myDataTable.getDataRows().get(0);
 		for (int i = 0; i < firstrow.getNumberValues(); i++) {
 			sb.append("<th class=\"standardTable_Header\">");
